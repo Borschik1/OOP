@@ -12,16 +12,17 @@ public class Bot {
     public static TelegramBot bot;
     public static Help help;
     public static About about;
+    public static Echo echo;
 
     public Bot(String token) {
         bot = new TelegramBot(token);
         help = new Help();
         about = new About();
+        echo = new Echo();
     }
 
 
-    private void process(Update update )
-    {
+    private void process(Update update ) {
         long chatId;
         String text;
         String userName;
@@ -31,18 +32,27 @@ public class Bot {
         userName = update.message().chat().firstName();
 
         if (text.equals("/about")) {
-            about.execute(chatId);
+            About.execute(chatId);
+            return;
         }
         if (text.equals("/help")) {
-            help.helpAll(chatId);
-        } else if (text.substring(0, 5).equals("/help")) {
-            help.helpCertain(chatId, text.substring(6, text.length()));
+            Help.helpAll(chatId);
+            return;
+        }
+        if (text.substring(0, 5).equals("/help")) {
+            Help.helpCertain(chatId, text.substring(6, text.length()));
+            return;
+        }
+        if (text.substring(0, 5).equals("/echo")) {
+            Echo.execute(chatId, text.substring(5, text.length()));
+            return;
         }
 
+        SendResponse response = Bot.bot.execute(new SendMessage(chatId, "Такой команды не найдено"));
     }
 
-    public void run(){
-            bot.setUpdatesListener(updates -> {
+    public void run() {
+        bot.setUpdatesListener(updates -> {
             updates.forEach(this::process);
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
