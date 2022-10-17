@@ -4,6 +4,9 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import commands.About;
+import commands.Echo;
+import commands.Help;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,6 +24,9 @@ public class App
             throw new RuntimeException(e);
         }
         Bot bot = new Bot(token);
+        bot.addCommand(new About());
+        bot.addCommand(new Echo());
+        bot.addCommand(new Help(bot.getPrefix()));
         bot.run();
     }
 }

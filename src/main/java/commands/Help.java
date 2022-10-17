@@ -1,14 +1,9 @@
 package commands;
 
-import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 import org.example.Bot;
 import struct.MessageInfo;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
 
 public class Help extends Command{
 
@@ -17,10 +12,10 @@ public class Help extends Command{
     };
 
     public void execute(MessageInfo messageInfo, Bot bot) {
-        if (messageInfo.getText().equals("")) {
-            helpAll(messageInfo.getChatId(), bot);
+        if (messageInfo.text().equals("")) {
+            helpAll(messageInfo.chatId(), bot);
         } else {
-            helpCertain(messageInfo.getChatId(), messageInfo.getText(), bot);
+            helpCertain(messageInfo.chatId(), messageInfo.text(), bot);
         }
     }
     private void helpAll(long chatId, Bot bot){

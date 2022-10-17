@@ -1,8 +1,6 @@
 package commands;
 
 import org.example.*;
-import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 import struct.MessageInfo;
 
 public class Echo extends Command{
@@ -12,10 +10,10 @@ public class Echo extends Command{
     }
 
     public void execute(MessageInfo messageInfo, Bot bot){
-        if (!messageInfo.getText().equals("")) {
-            bot.sendMessage(messageInfo.getChatId(), messageInfo.getText());
+        if (!messageInfo.text().equals("")) {
+            bot.sendMessage(messageInfo.chatId(), messageInfo.text());
         } else {
-            bot.sendMessage(messageInfo.getChatId(), "Введите сообщение после команды");
+            bot.sendMessage(messageInfo.chatId(), "Введите сообщение после команды");
         }
     }
 }

@@ -10,10 +10,8 @@ import commands.*;
 import kotlin.Pair;
 import struct.MessageInfo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
 public class Bot {
 
@@ -22,12 +20,9 @@ public class Bot {
 
     public Bot(String token) {
         bot = new TelegramBot(token);
-        addCommand(new About());
-        addCommand(new Echo());
-        addCommand(new Help(getPrefix()));
     }
 
-    private void addCommand(Command command) {
+    public void addCommand(Command command) {
         commands.put(command.getName(), command);
     }
     public Iterator<Command> getCommands() {
@@ -67,7 +62,7 @@ public class Bot {
         if (command != null) {
             command.execute(messageInfo, this);
         } else {
-            sendMessage(messageInfo.getChatId(), "Такой команды не найдено");
+            sendMessage(messageInfo.chatId(), "Такой команды не найдено");
         }
     }
 
