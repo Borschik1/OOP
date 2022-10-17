@@ -17,7 +17,7 @@ public class App
     public static void main( String[] args ){
         String token;
         try {
-            Scanner scanner = new Scanner(new File("src/main/resources/token.txt"));
+            Scanner scanner = new Scanner(new File("token.txt"));
             token = scanner.nextLine();
         }
         catch (FileNotFoundException e) {
