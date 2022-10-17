@@ -3,34 +3,41 @@ package commands;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.example.Bot;
+import struct.MessageInfo;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
-public class Help {
+public class Help extends Command{
 
-    public static HashMap<String,String> descriptions = new HashMap<String,String>();
-
-    public Help(){
-        descriptions.put("/help", "Получение информации о всех командах");
-        descriptions.put("/help <command>", "Получение информации о конкретной команде");
+    public Help(String prefix){
+        super("help", "Получение информации о команде. Если после " + prefix + "help стоит название команды, то выводится ее описание.");
     };
-    public static void add(String key, String value){
-        descriptions.put(key, value);
-    }
-    public static void helpAll(long chatId){
-        StringBuilder answer = new StringBuilder();
-        for (String key : descriptions.keySet()){
-            answer.append(key).append(" ").append(descriptions.get(key)).append("\n");
+
+    public void execute(MessageInfo messageInfo, Bot bot) {
+        if (messageInfo.getText().equals("")) {
+            helpAll(messageInfo.getChatId(), bot);
+        } else {
+            helpCertain(messageInfo.getChatId(), messageInfo.getText(), bot);
         }
-        SendResponse response = Bot.bot.execute(new SendMessage(chatId, answer.toString()));
     }
-    public static void helpCertain(long chatId, String command){
-        if (descriptions.containsKey(command)){
-            SendResponse response = Bot.bot.execute(new SendMessage(chatId, command + " " + descriptions.get(command)));
+    private void helpAll(long chatId, Bot bot){
+        StringBuilder answer = new StringBuilder();
+        for (Iterator<Command> it = bot.getCommands(); it.hasNext(); ) {
+            Command command = it.next();
+            answer.append(bot.getPrefix()).append(command.getName()).append(" ").append(command.getDescription()).append("\n");
+        }
+        bot.sendMessage(chatId, answer.toString());
+    }
+    private void helpCertain(long chatId, String name, Bot bot){
+        var command = bot.getCommandByName(name);
+        if (command != null){
+            bot.sendMessage(chatId, bot.getPrefix() + name + " " + command.getDescription());
         }
         else{
-            SendResponse response = Bot.bot.execute(new SendMessage(chatId, "Такой команды не найдено"));
+            bot.sendMessage(chatId, "Такой команды не найдено");
         }
     }
 

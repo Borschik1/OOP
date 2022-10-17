@@ -2,53 +2,73 @@ package org.example;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import commands.*;
+import kotlin.Pair;
+import struct.MessageInfo;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 public class Bot {
 
-    public static TelegramBot bot;
-    public static Help help;
-    public static About about;
-    public static Echo echo;
+    private final TelegramBot bot;
+    private final HashMap<String,Command> commands = new HashMap<>();
 
     public Bot(String token) {
         bot = new TelegramBot(token);
-        help = new Help();
-        about = new About();
-        echo = new Echo();
+        addCommand(new About());
+        addCommand(new Echo());
+        addCommand(new Help(getPrefix()));
     }
 
-
-    private void process(Update update ) {
-        long chatId;
-        String text;
-        String userName;
-
-        chatId = update.message().chat().id();
-        text = update.message().text();
-        userName = update.message().chat().firstName();
-
-        if (text.equals("/about")) {
-            About.execute(chatId);
-            return;
+    private void addCommand(Command command) {
+        commands.put(command.getName(), command);
+    }
+    public Iterator<Command> getCommands() {
+        return commands.values().iterator();
+    }
+    public Command getCommandByName(String name) {
+        return commands.get(name);
+    }
+    public SendResponse sendMessage(long chatId, String text) {
+        return bot.execute(new SendMessage(chatId, text));
+    }
+    public String getPrefix() {
+        return "/";
+    }
+    private Pair<String, MessageInfo> parseMessage(Message message) {
+        var chatId = message.chat().id();
+        var text = message.text();
+        var textSplit = text.split(" ", 2);
+        var name = textSplit[0].substring(getPrefix().length());
+        if (textSplit.length == 2) {
+            text = textSplit[1];
+        } else {
+            text = "";
         }
-        if (text.equals("/help")) {
-            Help.helpAll(chatId);
-            return;
-        }
-        if (text.substring(0, 5).equals("/help")) {
-            Help.helpCertain(chatId, text.substring(6, text.length()));
-            return;
-        }
-        if (text.substring(0, 5).equals("/echo")) {
-            Echo.execute(chatId, text.substring(5, text.length()));
-            return;
-        }
+        var userName = message.chat().firstName();
+        var messageInfo = new MessageInfo(chatId, text, userName);
+        return new Pair<>(name, messageInfo);
+    }
 
-        SendResponse response = Bot.bot.execute(new SendMessage(chatId, "Такой команды не найдено"));
+    private void process(Update update) {
+
+        var pair = parseMessage(update.message());
+        var name = pair.getFirst();
+        var messageInfo = pair.getSecond();
+
+        var command = getCommandByName(name);
+        if (command != null) {
+            command.execute(messageInfo, this);
+        } else {
+            sendMessage(messageInfo.getChatId(), "Такой команды не найдено");
+        }
     }
 
     public void run() {

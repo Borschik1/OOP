@@ -3,18 +3,19 @@ package commands;
 import org.example.*;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import struct.MessageInfo;
 
-public class Echo {
+public class Echo extends Command{
 
     public Echo(){
-        Help.add("/echo", "Вывод введенной строчки");
+        super("echo", "Вывод введенной строчки");
     }
 
-    public static void execute(long chatId, String message){
-        if (!message.equals("")) {
-            SendResponse response = Bot.bot.execute(new SendMessage(chatId, message.substring(1, message.length())));
+    public void execute(MessageInfo messageInfo, Bot bot){
+        if (!messageInfo.getText().equals("")) {
+            bot.sendMessage(messageInfo.getChatId(), messageInfo.getText());
         } else {
-            SendResponse response = Bot.bot.execute(new SendMessage(chatId, "Введите сообщение после команды /echo"));
+            bot.sendMessage(messageInfo.getChatId(), "Введите сообщение после команды");
         }
     }
 }
