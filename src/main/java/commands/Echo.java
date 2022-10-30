@@ -11,9 +11,9 @@ public class Echo extends Command{
 
     public void execute(MessageInfo messageInfo, Bot bot){
         if (!messageInfo.text().equals("")) {
-            bot.sendMessage(messageInfo.chatId(), messageInfo.text());
+            bot.present(messageInfo.chatId(), messageInfo.text());
         } else {
-            bot.sendMessage(messageInfo.chatId(), "Введите сообщение после команды");
+            bot.present(messageInfo.chatId(), "Введите сообщение после команды");
         }
     }
 }

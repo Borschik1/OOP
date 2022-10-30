@@ -29,5 +29,11 @@
       <artifactId>java-telegram-bot-api</artifactId>
       <version>6.2.0</version>
     </dependency>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>RELEASE</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
 </project>

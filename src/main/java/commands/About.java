@@ -10,6 +10,6 @@ public class About extends Command {
     }
 
     public void execute(MessageInfo messageInfo, Bot bot){
-        bot.sendMessage(messageInfo.chatId(), "Розенберг(КН-201), Гальперин(КН-201), продолжение следует");
+        bot.present(messageInfo.chatId(), "Розенберг(КН-201), Гальперин(КН-201), продолжение следует");
     }
 }
