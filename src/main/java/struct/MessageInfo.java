@@ -1,4 +1,6 @@
 package struct;
 
-public record MessageInfo(long chatId, String text, String userName) {
+import domain.User;
+
+public record MessageInfo(long chatId, String text, User user) {
 }

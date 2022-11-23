@@ -7,8 +7,9 @@ import com.pengrad.telegrambot.request.SendMessage;
 import commands.Command;
 import kotlin.Pair;
 import struct.MessageInfo;
-
 import java.util.ArrayList;
+import domain.UserList;
+import domain.User;
 
 public class TelegramBot implements IWriteRead{
     private final com.pengrad.telegrambot.TelegramBot telegramBot;
@@ -40,8 +41,9 @@ public class TelegramBot implements IWriteRead{
         } else {
             text = "";
         }
-        var userName = message.chat().firstName();
-        var messageInfo = new MessageInfo(chatId, text, userName);
+        User user = bot.userList.getUserById(chatId);
+        user.setName(message.chat().firstName());
+        var messageInfo = new MessageInfo(chatId, text, user);
         return new Pair<>(name, messageInfo);
     }
 

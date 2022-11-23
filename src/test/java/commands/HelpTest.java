@@ -1,6 +1,7 @@
 package commands;
 
 import com.pengrad.telegrambot.TelegramBot;
+import domain.User;
 import org.example.Bot;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +16,8 @@ public class HelpTest {
         var bot = new Bot(writerMock);
         bot.addCommand(new Help());
         bot.addCommand(new Echo());
-        bot.process("help", new MessageInfo(0, "echo", "0"));
+        User user = new User((long) 0);
+        bot.process("help", new MessageInfo(0, "echo", user));
         Assert.assertEquals(writerMock.getText(), "/echo Вывод введенной строчки");
     }
     @Test
@@ -24,7 +26,8 @@ public class HelpTest {
         var bot = new Bot(writerMock);
         bot.addCommand(new Help());
         bot.addCommand(new About());
-        bot.process("help", new MessageInfo(0, "about", "0"));
+        User user = new User((long) 0);
+        bot.process("help", new MessageInfo(0, "about", user));
         Assert.assertEquals(writerMock.getText(), "/about Получить информацию о функционале и авторах бота");
     }
 }

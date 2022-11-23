@@ -1,5 +1,6 @@
 package commands;
 
+import jakarta.mail.MessagingException;
 import org.example.Bot;
 import struct.MessageInfo;
 
@@ -21,6 +22,6 @@ abstract public class Command {
         return description;
     }
 
-    abstract public void execute(MessageInfo messageInfo, Bot bot);
+    abstract public void execute(MessageInfo messageInfo, Bot bot) throws MessagingException;
 
 }
