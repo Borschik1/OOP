@@ -30,4 +30,33 @@ public class HelpTest {
         bot.process("help", new MessageInfo(0, "about", user));
         Assert.assertEquals(writerMock.getText(), "/about Получить информацию о функционале и авторах бота");
     }
+    @Test
+    public void test3(){
+        var writerMock = new WriterMock();
+        var bot = new Bot(writerMock);
+        bot.addCommand(new Help());
+        bot.process("help", new MessageInfo(0, "help", "0"));
+        Assert.assertEquals(writerMock.getText(), "/help Получение информации о команде. Если после /help стоит название команды, то выводится ее описание");
+    }
+    @Test
+    public void test4(){
+        var writerMock = new WriterMock();
+        var bot = new Bot(writerMock);
+        bot.addCommand(new Help());
+        bot.addCommand(new Echo());
+        bot.addCommand(new About());
+        bot.process("help", new MessageInfo(0, "", "0"));
+        Assert.assertEquals(writerMock.getText(),
+                        "/help Получение информации о команде. Если после /help стоит название команды, то выводится ее описание\n" +
+                        "/about Получить информацию о функционале и авторах бота\n" +
+                        "/echo Вывод введенной строчки\n");
+    }
+    @Test
+    public void test5(){
+        var writerMock = new WriterMock();
+        var bot = new Bot(writerMock);
+        bot.addCommand(new Help());
+        bot.process("wjgnwkg", new MessageInfo(0, "", "0"));
+        Assert.assertEquals(writerMock.getText(), "Такой команды не найдено");
+    }
 }

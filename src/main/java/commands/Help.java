@@ -8,7 +8,7 @@ import java.util.Iterator;
 public class Help extends Command{
 
     public Help(){
-        super("help", "Получение информации о команде. Если после /help стоит название команды, то выводится ее описание.");
+        super("help", "Получение информации о команде. Если после /help стоит название команды, то выводится ее описание");
     };
 
     public void execute(MessageInfo messageInfo, Bot bot) {
