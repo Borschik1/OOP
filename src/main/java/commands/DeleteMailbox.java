@@ -10,7 +10,7 @@ import java.util.Objects;
 public class DeleteMailbox extends Command {
 
     public DeleteMailbox(){
-        super("delete_mail", "Удаляет данную почту");
+        super("delete_mail", "/delete_mail <address>","Удаляет данную почту");
     }
 
     public void execute(MessageInfo messageInfo, Bot bot){
@@ -20,8 +20,9 @@ public class DeleteMailbox extends Command {
             bot.present(messageInfo.chatId(), MessagesTemplates.INCORRECT_ARGS.text);
             return;
         }
-        if (user.getMailbox(text) == null) {
+        if (user.getMailbox(text) != null) {
             user.deleteMailbox(text);
+            bot.present(messageInfo.chatId(), MessagesTemplates.DELETE_COMPLETE.text);
             return;
         }
         bot.present(messageInfo.chatId(), MessagesTemplates.MAIL_NOT_FOUND.text);

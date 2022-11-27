@@ -6,7 +6,7 @@ import struct.MessageInfo;
 public class Echo extends Command{
 
     public Echo(){
-        super("echo", "Вывод введенной строчки");
+        super("echo", "/echo <text>","Вывод введенной строчки");
     }
 
     public void execute(MessageInfo messageInfo, Bot bot){

@@ -9,7 +9,7 @@ import domain.User;
 public class Authentification extends Command {
 
     public Authentification(){
-        super("new_mail", "Аутентификация для дальнейшего взаимодействия почтой");
+        super("new_mail", "/new_mail <address> <password>","Аутентификация для дальнейшего взаимодействия почтой");
     }
 
     public void execute(MessageInfo messageInfo, Bot bot){
@@ -26,6 +26,7 @@ public class Authentification extends Command {
                 return;
             }
             user.addNewMailbox(mailbox);
+            bot.present(messageInfo.chatId(), MessagesTemplates.AUTH_COMPLETE.text);
             return;
         }
         bot.present(messageInfo.chatId(), MessagesTemplates.AUTH_LOGIN_ALREADY_SEEN.text);

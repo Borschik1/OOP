@@ -15,7 +15,6 @@ public class Letter {
     private String body;
     private String sender;
     private String date;
-    // TODO mb have multipart with attachments
 
     public String getSubject() {
         return subject;

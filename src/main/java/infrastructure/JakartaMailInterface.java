@@ -47,7 +47,8 @@ public class JakartaMailInterface implements MailInterface {
         inbox.open(Folder.READ_ONLY);
 
         int totalMessages = inbox.getMessageCount();
-        Message[] mailMessages = inbox.getMessages(Math.max(0, totalMessages - lettersCount + 1), totalMessages);
+        if (totalMessages == 0) { return null; }
+        Message[] mailMessages = inbox.getMessages(Math.max(1, totalMessages - lettersCount + 1), totalMessages);
 
         FetchProfile fp = new FetchProfile();
         fp.add(FetchProfile.Item.ENVELOPE);
@@ -71,10 +72,10 @@ public class JakartaMailInterface implements MailInterface {
     public boolean isCredentialsCorrect(Mailbox mailbox){
         try {
             Properties properties = new Properties();
-            properties.setProperty("mail.store.protocol", "imap");
-            properties.setProperty("mail.imap.ssl.enable", "true");
-            properties.setProperty("mail.imap.host", "imap.gmail.com");
-            properties.setProperty("mail.imap.port", "993");
+            properties.setProperty("mail.store.protocol", "imaps");
+            properties.setProperty("mail.imaps.ssl.enable", "true");
+            properties.setProperty("mail.imaps.host", "imap.gmail.com");
+            properties.setProperty("mail.imaps.port", "993");
 
             Session session = Session.getInstance(properties, new Authenticator() {
                 @Override

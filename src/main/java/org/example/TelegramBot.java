@@ -5,6 +5,8 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import commands.Command;
+import enums.MessagesTemplates;
+import jakarta.mail.MessagingException;
 import kotlin.Pair;
 import struct.MessageInfo;
 import java.util.ArrayList;
@@ -27,9 +29,13 @@ public class TelegramBot implements IWriteRead{
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
     }
-    private void process(Update update){
+    private void process(Update update) {
         var message = parseMessage(update.message());
-        bot.process(message.getFirst(), message.getSecond());
+        try {
+            bot.process(message.getFirst(), message.getSecond());
+        } catch (MessagingException e) {
+            bot.present(message.getSecond().chatId(), MessagesTemplates.MAIL_NOT_FOUND.text);
+        }
     }
     private Pair<String, MessageInfo> parseMessage(Message message) {
         var chatId = message.chat().id();

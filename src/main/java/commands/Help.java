@@ -8,7 +8,7 @@ import java.util.Iterator;
 public class Help extends Command{
 
     public Help(){
-        super("help", "Получение информации о команде. Если после /help стоит название команды, то выводится ее описание");
+        super("help", "/help ~command~", "Получение информации о команде. При отсутствии команды после /help выводит информацию о всех командах");
     };
 
     public void execute(MessageInfo messageInfo, Bot bot) {
@@ -22,14 +22,14 @@ public class Help extends Command{
         StringBuilder answer = new StringBuilder();
         for (Iterator<Command> it = bot.getCommands(); it.hasNext(); ) {
             Command command = it.next();
-            answer.append("/").append(command.getName()).append(" ").append(command.getDescription()).append("\n");
+            answer.append(command.getInputFormat()).append(" ").append(command.getDescription()).append("\n");
         }
         bot.present(chatId, answer.toString());
     }
     private void helpCertain(long chatId, String name, Bot bot){
         var command = bot.getCommandByName(name);
         if (command != null){
-            bot.present(chatId, "/" + name + " " + command.getDescription());
+            bot.present(chatId, command.getInputFormat() + " " + command.getDescription());
         }
         else{
             bot.present(chatId, "Такой команды не найдено");

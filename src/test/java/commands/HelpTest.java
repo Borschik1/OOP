@@ -2,6 +2,7 @@ package commands;
 
 import com.pengrad.telegrambot.TelegramBot;
 import domain.User;
+import jakarta.mail.MessagingException;
 import org.example.Bot;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,17 +12,17 @@ import struct.MessageInfo;
 public class HelpTest {
 
     @Test
-    public void test1(){
+    public void test1() throws MessagingException {
         var writerMock = new WriterMock();
         var bot = new Bot(writerMock);
         bot.addCommand(new Help());
         bot.addCommand(new Echo());
         User user = new User((long) 0);
         bot.process("help", new MessageInfo(0, "echo", user));
-        Assert.assertEquals(writerMock.getText(), "/echo Вывод введенной строчки");
+        Assert.assertEquals(writerMock.getText(), "/echo <text> Вывод введенной строчки");
     }
     @Test
-    public void test2(){
+    public void test2() throws MessagingException {
         var writerMock = new WriterMock();
         var bot = new Bot(writerMock);
         bot.addCommand(new Help());
@@ -31,32 +32,43 @@ public class HelpTest {
         Assert.assertEquals(writerMock.getText(), "/about Получить информацию о функционале и авторах бота");
     }
     @Test
-    public void test3(){
+    public void test3() throws MessagingException {
         var writerMock = new WriterMock();
         var bot = new Bot(writerMock);
         bot.addCommand(new Help());
-        bot.process("help", new MessageInfo(0, "help", "0"));
-        Assert.assertEquals(writerMock.getText(), "/help Получение информации о команде. Если после /help стоит название команды, то выводится ее описание");
+        User user = new User((long) 0);
+        bot.process("help", new MessageInfo(0, "help", user));
+        Assert.assertEquals(writerMock.getText(), "/help ~command~ Получение информации о команде. При отсутствии команды после /help выводит информацию о всех командах");
     }
     @Test
-    public void test4(){
+    public void test4() throws MessagingException {
         var writerMock = new WriterMock();
         var bot = new Bot(writerMock);
         bot.addCommand(new Help());
-        bot.addCommand(new Echo());
+        bot.addCommand(new Authentification());
+        bot.addCommand(new DeleteMailbox());
+        bot.addCommand(new ReadLastMessages());
         bot.addCommand(new About());
-        bot.process("help", new MessageInfo(0, "", "0"));
+        bot.addCommand(new Echo());
+        User user = new User((long) 0);
+        bot.process("help", new MessageInfo(0, "", user));
         Assert.assertEquals(writerMock.getText(),
-                        "/help Получение информации о команде. Если после /help стоит название команды, то выводится ее описание\n" +
-                        "/about Получить информацию о функционале и авторах бота\n" +
-                        "/echo Вывод введенной строчки\n");
+                """
+                        /help ~command~ Получение информации о команде. При отсутствии команды после /help выводит информацию о всех командах
+                        /new_mail <address> <password> Аутентификация для дальнейшего взаимодействия почтой
+                        /delete_mail <address> Удаляет данную почту
+                        /read_messages <address> <number of emails being read> Чтение последних n сообщений по заданному адресу. Если на почте недостаточно сообщений - выводит все имеющиеся.
+                        /about Получить информацию о функционале и авторах бота
+                        /echo <text> Вывод введенной строчки
+                        """);
     }
     @Test
-    public void test5(){
+    public void test5() throws MessagingException {
         var writerMock = new WriterMock();
         var bot = new Bot(writerMock);
         bot.addCommand(new Help());
-        bot.process("wjgnwkg", new MessageInfo(0, "", "0"));
+        User user = new User((long) 0);
+        bot.process("wjgnwkg", new MessageInfo(0, "", user));
         Assert.assertEquals(writerMock.getText(), "Такой команды не найдено");
     }
 }

@@ -10,8 +10,8 @@ import domain.User;
 
 public class ReadLastMessages extends Command {
 
-    public ReadLastMessages(){
-        super("read_messages", "Чтение последних n сообщений по заданному адресу. Если на почте недостаточно сообщений - выводит все имеющиеся.");
+    public ReadLastMessages() {
+        super("read_messages", "/read_messages <address> <number of emails being read>", "Чтение последних n сообщений по заданному адресу. Если на почте недостаточно сообщений - выводит все имеющиеся.");
     }
 
     public void execute(MessageInfo messageInfo, Bot bot) throws MessagingException {
@@ -21,9 +21,15 @@ public class ReadLastMessages extends Command {
             return;
         }
         User user = messageInfo.user();
-        if (user.getMailbox(args[0]) == null) {
+        if (user.getMailbox(args[0]) != null) {
             Letter[] letters = bot.mailInterface.readMessages(user.getMailbox(args[0]), Integer.parseInt(args[1]));
-            for (Letter letter : letters) { bot.present(messageInfo.chatId(), letter.toString()); }
+            if (letters == null) {
+                bot.present(messageInfo.chatId(), MessagesTemplates.EMPTY_MAIL.text);
+                return;
+            }
+            for (Letter letter : letters) {
+                bot.present(messageInfo.chatId(), letter.toString());
+            }
             return;
         }
         bot.present(messageInfo.chatId(), MessagesTemplates.MAIL_NOT_FOUND.text);
