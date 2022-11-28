@@ -96,6 +96,7 @@ public class Letter {
             if (bodyPart.isMimeType("text/plain")) {
                 String text = bodyPart.getContent().toString();
                 letterLines.add(text);
+                break;
             } else if (bodyPart.isMimeType("text/html")) {
                 String html = (String) bodyPart.getContent();
                 String text = Jsoup.parse(html).text();

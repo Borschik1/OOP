@@ -29,6 +29,7 @@ public class ReadLastMessages extends Command {
             }
             for (Letter letter : letters) {
                 bot.present(messageInfo.chatId(), letter.toString());
+                System.out.println(letter);
             }
             return;
         }
