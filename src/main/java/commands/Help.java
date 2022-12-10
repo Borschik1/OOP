@@ -1,5 +1,6 @@
 package commands;
 
+import domain.BotMessage;
 import org.example.Bot;
 import struct.MessageInfo;
 
@@ -24,15 +25,15 @@ public class Help extends Command{
             Command command = it.next();
             answer.append(command.getInputFormat()).append(" ").append(command.getDescription()).append("\n");
         }
-        bot.present(chatId, answer.toString());
+        bot.present(new BotMessage(answer.toString(), chatId));
     }
     private void helpCertain(long chatId, String name, Bot bot){
         var command = bot.getCommandByName(name);
         if (command != null){
-            bot.present(chatId, command.getInputFormat() + " " + command.getDescription());
+            bot.present(new BotMessage(command.getInputFormat() + " " + command.getDescription(), chatId));
         }
         else{
-            bot.present(chatId, "Такой команды не найдено");
+            bot.present(new BotMessage("Такой команды не найдено", chatId));
         }
     }
 

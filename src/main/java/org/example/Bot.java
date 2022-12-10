@@ -3,6 +3,7 @@ package org.example;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import commands.*;
+import domain.BotMessage;
 import domain.User;
 import domain.UserList;
 import jakarta.mail.MessagingException;
@@ -36,8 +37,8 @@ public class Bot {
     public Command getCommandByName(String name) {
         return commands.get(name);
     }
-    public void present(long chatId, String text) {
-        writeRead.write(chatId, text);
+    public void present(BotMessage message) {
+        writeRead.write(message);
     }
 
     public void process(String name, MessageInfo messageInfo) throws MessagingException {
@@ -46,7 +47,7 @@ public class Bot {
         if (command != null) {
             command.execute(messageInfo, this);
         } else {
-            present(messageInfo.chatId(), "Такой команды не найдено");
+            present(new BotMessage("Такой команды не найдено", messageInfo.chatId()));
         }
     }
 

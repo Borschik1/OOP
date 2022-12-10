@@ -12,6 +12,7 @@ import struct.MessageInfo;
 import java.util.ArrayList;
 import domain.UserList;
 import domain.User;
+import domain.BotMessage;
 
 public class TelegramBot implements IWriteRead{
     private final com.pengrad.telegrambot.TelegramBot telegramBot;
@@ -30,16 +31,20 @@ public class TelegramBot implements IWriteRead{
         });
     }
     private void process(Update update) {
-        var message = parseMessage(update.message());
+        Pair<String, MessageInfo> message;
+        if (update.callbackQuery() == null) {
+            message = parseMessage(update.message().chat().id(), update.message().text());
+        } else {
+            message = parseMessage(update.callbackQuery().message().chat().id(),
+                    update.callbackQuery().data());
+        }
         try {
             bot.process(message.getFirst(), message.getSecond());
         } catch (MessagingException e) {
-            bot.present(message.getSecond().chatId(), MessagesTemplates.MAIL_NOT_FOUND.text);
+            bot.present(new BotMessage(MessagesTemplates.MAIL_NOT_FOUND.text, message.getSecond().chatId()));
         }
     }
-    private Pair<String, MessageInfo> parseMessage(Message message) {
-        var chatId = message.chat().id();
-        var text = message.text();
+    private Pair<String, MessageInfo> parseMessage(Long chatId, String text) {
         var textSplit = text.split(" ", 2);
         var name = textSplit[0].substring(1);
         if (textSplit.length == 2) {
@@ -48,13 +53,16 @@ public class TelegramBot implements IWriteRead{
             text = "";
         }
         User user = bot.userList.getUserById(chatId);
-        user.setName(message.chat().firstName());
         var messageInfo = new MessageInfo(chatId, text, user);
         return new Pair<>(name, messageInfo);
     }
 
     @Override
-    public void write(long chatId, String text) {
-        telegramBot.execute(new SendMessage(chatId, text));
+    public void write(BotMessage message) {
+        if (message.getButtons() == null) {
+            telegramBot.execute(new SendMessage(message.getChatId(), message.getText()));
+            return;
+        }
+        telegramBot.execute(new SendMessage(message.getChatId(), message.getText()).replyMarkup(message.getButtons()));
     }
 }

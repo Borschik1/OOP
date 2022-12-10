@@ -1,5 +1,6 @@
 package commands;
 
+import domain.BotMessage;
 import org.example.Bot;
 import struct.MessageInfo;
 import enums.MessagesTemplates;
@@ -17,14 +18,14 @@ public class DeleteMailbox extends Command {
         User user = messageInfo.user();
         String text = messageInfo.text();
         if (Objects.equals(text, "")) {
-            bot.present(messageInfo.chatId(), MessagesTemplates.INCORRECT_ARGS.text);
+            bot.present(new BotMessage(MessagesTemplates.INCORRECT_ARGS.text, messageInfo.chatId()));
             return;
         }
         if (user.getMailbox(text) != null) {
             user.deleteMailbox(text);
-            bot.present(messageInfo.chatId(), MessagesTemplates.DELETE_COMPLETE.text);
+            bot.present(new BotMessage(MessagesTemplates.DELETE_COMPLETE.text, messageInfo.chatId()));
             return;
         }
-        bot.present(messageInfo.chatId(), MessagesTemplates.MAIL_NOT_FOUND.text);
+        bot.present(new BotMessage(MessagesTemplates.MAIL_NOT_FOUND.text, messageInfo.chatId()));
     }
 }

@@ -1,5 +1,6 @@
 package commands;
 
+import domain.BotMessage;
 import org.example.*;
 import struct.MessageInfo;
 
@@ -10,6 +11,6 @@ public class About extends Command {
     }
 
     public void execute(MessageInfo messageInfo, Bot bot){
-        bot.present(messageInfo.chatId(), "Розенберг(КН-201), Гальперин(КН-201), продолжение следует");
+        bot.present(new BotMessage("Розенберг(КН-201), Гальперин(КН-201), продолжение следует", messageInfo.chatId()));
     }
 }
