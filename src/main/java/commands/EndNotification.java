@@ -20,7 +20,6 @@ public class EndNotification extends Command{
             "Отключает уведомления от данной почты"); }
 
     public void execute(MessageInfo messageInfo, Bot bot) throws MessagingException {
-        String[] args = messageInfo.text().split("\s");
         if (messageInfo.text().equals("")) {
             if (messageInfo.user().getFavourites() == null) {
                 bot.present(new BotMessage(MessagesTemplates.USER_FAVORITY_LIST_EMPTY.text, messageInfo.chatId()));
