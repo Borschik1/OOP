@@ -25,6 +25,10 @@ public class App
         commands.add(new Authentification());
         commands.add(new DeleteMailbox());
         commands.add(new ReadLastMessages());
+        commands.add(new AddFavorites());
+        commands.add(new DeleteFavorites());
+        commands.add(new StartNotification());
+        commands.add(new EndNotification());
         TelegramBot telegramBot = new TelegramBot(token, commands);
         telegramBot.run();
     }

@@ -5,8 +5,8 @@ import jakarta.mail.*;
 import domain.Letter;
 import domain.Mailbox;
 import interfaces.MailInterface;
+import org.example.Notification;
 
-import java.time.LocalDateTime;
 import java.util.Properties;
 
 public class JakartaMailInterface implements MailInterface {
@@ -49,6 +49,54 @@ public class JakartaMailInterface implements MailInterface {
         int totalMessages = inbox.getMessageCount();
         if (totalMessages == 0) { return null; }
         Message[] mailMessages = inbox.getMessages(Math.max(1, totalMessages - lettersCount + 1), totalMessages);
+
+        FetchProfile fp = new FetchProfile();
+        fp.add(FetchProfile.Item.ENVELOPE);
+        fp.add(IMAPFolder.FetchProfileItem.MESSAGE);
+
+        inbox.fetch(mailMessages, fp);
+
+        Letter[] letters = new Letter[mailMessages.length];
+        for (int i = 0; i < mailMessages.length; i++) {
+            letters[i] = Letter.fromMailMessage(mailMessages[i]);
+        }
+        return letters;
+    }
+    @Override
+    public int getMessagesCount(Mailbox mailbox) throws MessagingException {
+        String email = mailbox.getEmail();
+        String password = mailbox.getPassword();
+
+        Properties props = getProperties(email);
+
+        Session session = Session.getDefaultInstance(props, null);
+
+        Store store = session.getStore("imap");
+        store.connect(props.getProperty("mail.imap.host"), email, password);
+        IMAPFolder inbox = (IMAPFolder) store.getFolder("INBOX");
+        inbox.open(Folder.READ_ONLY);
+
+        return inbox.getMessageCount();
+    }
+    @Override
+    public Letter[] readNewMessages(Mailbox mailbox, Notification notification) throws MessagingException {
+        String email = mailbox.getEmail();
+        String password = mailbox.getPassword();
+
+        Properties props = getProperties(email);
+
+        Session session = Session.getDefaultInstance(props, null);
+
+        Store store = session.getStore("imap");
+        store.connect(props.getProperty("mail.imap.host"), email, password);
+        IMAPFolder inbox = (IMAPFolder) store.getFolder("INBOX");
+        inbox.open(Folder.READ_ONLY);
+
+        int totalMessages = inbox.getMessageCount();
+        if (totalMessages == 0) { return null; }
+        if (notification.getLastReadMessage() == totalMessages) return null;
+        Message[] mailMessages = inbox.getMessages(notification.getLastReadMessage(), totalMessages);
+        notification.setLastReadMessage(totalMessages);
 
         FetchProfile fp = new FetchProfile();
         fp.add(FetchProfile.Item.ENVELOPE);

@@ -22,10 +22,8 @@ public class ReadLastMessages extends Command {
     }
 
     public void execute(MessageInfo messageInfo, Bot bot) throws MessagingException {
-        //System.out.println(messageInfo.text());
         String[] args = messageInfo.text().split("\s");
         if (messageInfo.text().equals("")) {
-            System.out.println("0");
             Set<String> mails = messageInfo.user().getMailAdress();
             if (mails.size() == 0) {
                 bot.present(new BotMessage(MessagesTemplates.USER_MAIL_LIST_EMPTY.text, messageInfo.chatId()));
@@ -42,7 +40,6 @@ public class ReadLastMessages extends Command {
             return;
         }
         if (args.length == 1) {
-            System.out.println("1 " + args[0]);
             bot.present(new BotMessage(MessagesTemplates.READ_CHOOSE_LETTERS_NUMBER.text, messageInfo.chatId(),
                     new InlineKeyboardMarkup(
                             new InlineKeyboardButton("1").callbackData("/" + getName() + " " + args[0] + " 1"),
