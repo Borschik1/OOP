@@ -29,8 +29,8 @@ public class DeleteMailboxTest {
         bot.addCommand(new Authentification());
         User user = new User((long) 0);
         bot.process("new_mail", new MessageInfo(0, "leonidtestoop@gmail.com smeghsactjibqzdo", user));
-        bot.process("delete_mail", new MessageInfo(0, "", user));
-        Assert.assertEquals(writerMock.getText(), "Некорректные параметры команды, введите /help для получения справки");
+        bot.process("delete_mail", new MessageInfo(0, "qwety wasd", user));
+        Assert.assertEquals(writerMock.getText(), "Данная почта не найдена. Перепроверьте введенный логин");
     }
 
     @Test

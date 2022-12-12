@@ -40,6 +40,10 @@ public class ReadLastMessages extends Command {
             return;
         }
         if (args.length == 1) {
+            if (messageInfo.user().getMailbox(messageInfo.text()) == null) {
+                bot.present(new BotMessage(MessagesTemplates.MAIL_NOT_FOUND.text, messageInfo.chatId()));
+                return;
+            }
             bot.present(new BotMessage(MessagesTemplates.READ_CHOOSE_LETTERS_NUMBER.text, messageInfo.chatId(),
                     new InlineKeyboardMarkup(
                             new InlineKeyboardButton("1").callbackData("/" + getName() + " " + args[0] + " 1"),
