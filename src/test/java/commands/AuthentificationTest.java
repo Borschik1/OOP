@@ -35,7 +35,7 @@ public class AuthentificationTest {
         var bot = new Bot(writerMock);
         bot.addCommand(new Authentification());
         User user = new User((long) 0);
-        bot.process("new_mail", new MessageInfo(0, "leonidtestoop@gmail.com sеееeghsactjibqzdo", user));
+        bot.process("new_mail", new MessageInfo(0, "leonidtestoop@gmail.com sеееeghvwwgwgsactjibqzdo", user));
         Assert.assertEquals(writerMock.getText(), "Неверный логин или пароль");
     }
 
