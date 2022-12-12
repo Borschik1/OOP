@@ -7,6 +7,6 @@ RUN mvn -B test -f /app/pom.xml clean package
 
 FROM eclipse-temurin:18.0.2_9-jre-alpine
 
-COPY --from=build /app/target/Telegram_bot-1.0-SNAPSHOT-jar-with-dependencies.jar /app/bot.jar
+COPY --from=build /app/target/Telegram2-1.0-SNAPSHOT-jar-with-dependencies.jar /app/bot.jar
 ENTRYPOINT ["java", "-jar", "/app/bot.jar"]
 CMD ["/app/config.properties"]
