@@ -20,7 +20,6 @@ public class StartNotification extends Command{
             "Запускает автоматическое чтение новых сообщений пришедших от избранных адресов"); }
 
     public void execute(MessageInfo messageInfo, Bot bot) throws MessagingException {
-        String[] args = messageInfo.text().split("\s");
         if (messageInfo.text().equals("")) {
             if (messageInfo.user().getFavourites() == null) {
                 bot.present(new BotMessage(MessagesTemplates.USER_FAVORITY_LIST_EMPTY.text, messageInfo.chatId()));
@@ -39,6 +38,10 @@ public class StartNotification extends Command{
         }
         Mailbox mailbox = messageInfo.user().getMailbox(messageInfo.text());
         if (mailbox != null) {
+            if (messageInfo.user().getFavourites() == null) {
+                bot.present(new BotMessage(MessagesTemplates.USER_FAVORITY_LIST_EMPTY.text, messageInfo.chatId()));
+                return;
+            }
             if (mailbox.getNotificationFlag()) {
                 bot.present(new BotMessage(MessagesTemplates.MAILBOX_NOTIFICATION_ALREADY_START.text, messageInfo.chatId()));
                 return;

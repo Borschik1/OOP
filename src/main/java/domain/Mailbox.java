@@ -15,7 +15,7 @@ public class Mailbox {
         this.password = password;
     }
 
-    public void breakNotification() { notification.Break(); }
+    public void breakNotification() { notification.notificationBreak(); }
     public void setNotification(Notification notification) { this.notification = notification; }
 
     public boolean getNotificationFlag() { return notificationFlag; }

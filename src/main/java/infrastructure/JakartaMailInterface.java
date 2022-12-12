@@ -94,7 +94,7 @@ public class JakartaMailInterface implements MailInterface {
 
         int totalMessages = inbox.getMessageCount();
         if (totalMessages == 0) { return null; }
-        if (notification.getLastReadMessage() == totalMessages) return null;
+        if (notification.getLastReadMessage() == totalMessages) { return null; }
         Message[] mailMessages = inbox.getMessages(notification.getLastReadMessage(), totalMessages);
         notification.setLastReadMessage(totalMessages);
 

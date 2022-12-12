@@ -6,8 +6,6 @@ public class BotMessage {
     private String text = null;
     private final Long chatId;
     private InlineKeyboardMarkup buttons;
-
-
     public String getText() {
         return text;
     }
@@ -18,23 +16,6 @@ public class BotMessage {
     public InlineKeyboardMarkup getButtons() {
         return buttons;
     }
-
-    /*public InlineKeyboardMarkup getMarkup() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-
-        if (buttons != null) {
-            for (InlineKeyboardButton button : buttons) {
-                List<InlineKeyboardButton> rowInline = new ArrayList<>();
-                rowInline.add(button);
-                rowsInline.add(rowInline);
-            }
-        }
-
-        inlineKeyboardMarkup.setKeyboard(rowsInline);
-        return inlineKeyboardMarkup;
-    }*/
-
     public BotMessage(String text, Long chatId) {
         this.text = text;
         this.chatId = chatId;

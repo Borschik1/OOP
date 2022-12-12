@@ -27,17 +27,16 @@ public class Notification implements Runnable {
     public void setLastReadMessage(int lastReadMessage) { this.lastReadMessage = lastReadMessage; }
     public int getLastReadMessage() { return lastReadMessage; }
 
-    public void Break() { runable = false; }
+    public void notificationBreak() { runable = false; }
 
     public void run() {
-        while (true) {
+        while (runable) {
             try {
                 Letter[] letters = bot.mailInterface.readNewMessages(mailbox, this);
                 if (letters != null) {
                     for (Letter letter : letters) {
                         if (user.getFavourites().contains(letter.getSender())) {
                             bot.present(new BotMessage(letter.toString(), chatId));
-                            System.out.println(letter);
                         }
                     }
                 }
