@@ -2,6 +2,7 @@ package commands;
 
 import domain.BotMessage;
 import domain.Mailbox;
+import infrastructure.DBRepository;
 import org.example.Bot;
 import struct.MessageInfo;
 import enums.MessagesTemplates;
@@ -27,6 +28,7 @@ public class Authentification extends Command {
                 return;
             }
             user.addNewMailbox(mailbox);
+            DBRepository.userMailUpdate(messageInfo.user());
             bot.present(new BotMessage(MessagesTemplates.AUTH_COMPLETE.text, messageInfo.chatId()));
             return;
         }

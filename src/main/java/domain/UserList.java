@@ -1,5 +1,7 @@
 package domain;
 
+import infrastructure.DBRepository;
+
 import java.util.HashMap;
 
 public class UserList {
@@ -9,14 +11,12 @@ public class UserList {
         userList = new HashMap<>();
     }
 
-    public void addUser(User user) {
-        Long id = user.getId();
-        userList.put(id, user);
-    }
+    public void addUser(User user) { userList.put(user.getId(), user); DBRepository.userAdd(user); }
 
     public User getUserById(Long id) {
         if (!userList.containsKey(id)) {
-            userList.put(id, new User(id));
+            User user = new User(id);
+            addUser(user);
         }
         return userList.get(id);
     }

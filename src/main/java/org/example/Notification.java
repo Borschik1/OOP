@@ -16,11 +16,10 @@ public class Notification implements Runnable {
     private boolean runable = true;
     private int lastReadMessage;
 
-    public Notification(User user, Mailbox mailbox, Long chatId, Bot bot) throws MessagingException {
+    public Notification(User user, Mailbox mailbox, Bot bot) throws MessagingException {
         this.bot = bot;
         this.user = user;
         this.mailbox = mailbox;
-        this.chatId = chatId;
         lastReadMessage = bot.mailInterface.getMessagesCount(mailbox);
     }
 
@@ -36,7 +35,7 @@ public class Notification implements Runnable {
                 if (letters != null) {
                     for (Letter letter : letters) {
                         if (user.getFavourites().contains(letter.getSender())) {
-                            bot.present(new BotMessage(letter.toString(), chatId));
+                            bot.present(new BotMessage(letter.toString(), user.getId()));
                         }
                     }
                 }

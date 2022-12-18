@@ -6,6 +6,7 @@ import domain.BotMessage;
 import domain.Mailbox;
 import domain.User;
 import enums.MessagesTemplates;
+import infrastructure.DBRepository;
 import jakarta.mail.MessagingException;
 import org.example.Bot;
 import org.example.Notification;
@@ -51,6 +52,7 @@ public class EndNotification extends Command{
             }
             mailbox.setNotificationFlag(false);
             mailbox.breakNotification();
+            DBRepository.userNotificationFlagUpdate(messageInfo.user());
             bot.present(new BotMessage(MessagesTemplates.DELETE_NOTIFICATION_COMPLETE.text, messageInfo.chatId()));
             return;
         }

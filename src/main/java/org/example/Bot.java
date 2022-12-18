@@ -1,13 +1,10 @@
 package org.example;
 
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.request.SendMessage;
 import commands.*;
 import domain.BotMessage;
-import domain.User;
 import domain.UserList;
+import interfaces.IWriteRead;
 import jakarta.mail.MessagingException;
-import kotlin.Pair;
 import struct.MessageInfo;
 
 import java.util.HashMap;

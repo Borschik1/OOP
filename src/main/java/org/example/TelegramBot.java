@@ -1,28 +1,32 @@
 package org.example;
 
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import commands.Command;
 import enums.MessagesTemplates;
+import infrastructure.DBInterface;
+import infrastructure.DBRepository;
+import interfaces.IWriteRead;
 import jakarta.mail.MessagingException;
 import kotlin.Pair;
 import struct.MessageInfo;
 import java.util.ArrayList;
-import domain.UserList;
+
 import domain.User;
 import domain.BotMessage;
 
-public class TelegramBot implements IWriteRead{
+public class TelegramBot implements IWriteRead {
     private final com.pengrad.telegrambot.TelegramBot telegramBot;
     private final Bot bot;
-    public TelegramBot(String token, ArrayList<Command> commands) {
+    public TelegramBot(String token, ArrayList<Command> commands) throws MessagingException {
         telegramBot = new com.pengrad.telegrambot.TelegramBot(token);
         bot = new Bot(this);
         for (var command : commands) {
             bot.addCommand(command);
         }
+        DBInterface dbInterface = new DBInterface();
+        DBRepository.createUsersFromDB(dbInterface.getAllUserDBO(), bot);
     }
     public void run() {
         telegramBot.setUpdatesListener(updates -> {

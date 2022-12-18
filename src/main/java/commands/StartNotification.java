@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import domain.BotMessage;
 import domain.Mailbox;
 import enums.MessagesTemplates;
+import infrastructure.DBRepository;
 import jakarta.mail.MessagingException;
 import org.example.Bot;
 import org.example.Notification;
@@ -47,10 +48,11 @@ public class StartNotification extends Command{
                 return;
             }
             mailbox.setNotificationFlag(true);
-            Notification notification = new Notification(messageInfo.user(), mailbox, messageInfo.chatId(), bot);
+            Notification notification = new Notification(messageInfo.user(), mailbox, bot);
             mailbox.setNotification(notification);
             Thread threadNotification = new Thread(notification);
             threadNotification.start();
+            DBRepository.userNotificationFlagUpdate(messageInfo.user());
             bot.present(new BotMessage(MessagesTemplates.MAILBOX_NOTIFICATION_COMPLETE.text, messageInfo.chatId()));
             return;
         }

@@ -3,6 +3,7 @@ package commands;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import domain.BotMessage;
+import infrastructure.DBRepository;
 import org.example.Bot;
 import struct.MessageInfo;
 import enums.MessagesTemplates;
@@ -40,6 +41,7 @@ public class DeleteMailbox extends Command {
         }
         if (user.getMailbox(text) != null) {
             user.deleteMailbox(text);
+            DBRepository.userMailUpdate(messageInfo.user());
             bot.present(new BotMessage(MessagesTemplates.DELETE_COMPLETE.text, messageInfo.chatId()));
             return;
         }

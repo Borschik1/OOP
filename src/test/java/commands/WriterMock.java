@@ -1,7 +1,7 @@
 package commands;
 
 import domain.BotMessage;
-import org.example.IWriteRead;
+import interfaces.IWriteRead;
 
 public class WriterMock implements IWriteRead {
     private String output = "";

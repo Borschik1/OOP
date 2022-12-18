@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import domain.BotMessage;
 import domain.User;
 import enums.MessagesTemplates;
+import infrastructure.DBRepository;
 import org.example.Bot;
 import struct.MessageInfo;
 
@@ -42,6 +43,7 @@ public class DeleteFavorites extends Command {
             return;
         }
         user.deleteFavorites(text);
+        DBRepository.userFavoritesUpdate(messageInfo.user());
         bot.present(new BotMessage(MessagesTemplates.DELETE_FAVORITES_COMPLETE.text, messageInfo.chatId()));
     }
 }

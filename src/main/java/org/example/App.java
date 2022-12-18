@@ -1,6 +1,7 @@
 package org.example;
 
 import commands.*;
+import jakarta.mail.MessagingException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +10,7 @@ import java.util.Scanner;
 
 public class App 
 {
-    public static void main( String[] args ){
+    public static void main( String[] args ) throws MessagingException {
         String token;
         try {
             Scanner scanner = new Scanner(new File("token.txt"));

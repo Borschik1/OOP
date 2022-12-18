@@ -2,6 +2,7 @@ package commands;
 
 import domain.BotMessage;
 import enums.MessagesTemplates;
+import infrastructure.DBRepository;
 import org.example.Bot;
 import struct.MessageInfo;
 
@@ -21,6 +22,7 @@ public class AddFavorites extends Command {
             return;
         }
         messageInfo.user().addFavorities(messageInfo.text());
+        DBRepository.userFavoritesUpdate(messageInfo.user());
         bot.present(new BotMessage(MessagesTemplates.ADD_FAVORITES_COMPLETE.text, messageInfo.chatId()));
     }
 }

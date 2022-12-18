@@ -1,13 +1,18 @@
 package infrastructure;
 
 import com.sun.mail.imap.IMAPFolder;
+import domain.SendLetter;
 import jakarta.mail.*;
 import domain.Letter;
 import domain.Mailbox;
 import interfaces.MailInterface;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import org.example.Notification;
 
+import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 
 public class JakartaMailInterface implements MailInterface {
     static private Properties getProperties(String email) {
@@ -110,10 +115,34 @@ public class JakartaMailInterface implements MailInterface {
         }
         return letters;
     }
-
     @Override
-    public void sendMessage(Mailbox mailbox, Letter letter) {
+    public void sendMessage(Mailbox mailbox, SendLetter letter) throws MessagingException {
+        Properties props = new Properties();
 
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(mailbox.getEmail(), mailbox.getPassword()); }
+        });
+        Transport.send(Objects.requireNonNull(prepareMessage(session, letter)));
+    }
+
+    private static Message prepareMessage(Session session, SendLetter letter) {
+        Message message = new MimeMessage(session);
+        try {
+            message.setFrom(new InternetAddress(letter.getFrom().getEmail()));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(letter.getTo()));
+            message.setSubject(letter.getSubject());
+            message.setText(letter.getText());
+            return message;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
